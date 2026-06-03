@@ -22,7 +22,7 @@ pipeline {
             steps {
                 bat """
                     call venv\\Scripts\\activate.bat
-                    python -m pytest --junitxml=relatorio-testes.xml
+                    python -m pytest --junitxml=relatorio-testes.xml --cov=app --cov-report=html --cov-report=xml
                 """
             }
         }
@@ -59,21 +59,15 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: 'relatorio-testes.xml'
+
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'htmlcov',
+                reportFiles: 'index.html',
+                reportName: 'Cobertura de Testes'
+            ])
         }
     }
-
-    post {
-    always {
-
-        publishHTML([
-            allowMissing: false,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'htmlcov',
-            reportFiles: 'index.html',
-            reportName: 'Cobertura de Testes'
-        ])
-
-    }
-}
 }
