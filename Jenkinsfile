@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         PYTHON = "C:\\Users\\Diego\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe"
+        JENKINS_NODE_COOKIE = "dontKillMe"
     }
 
     stages {
@@ -38,8 +39,7 @@ pipeline {
         stage('Parar Aplicacao Antiga') {
             steps {
                 bat """
-                    C:\\Windows\\System32\\taskkill.exe /F /IM python.exe /T >nul 2>&1
-                    C:\\Windows\\System32\\taskkill.exe /F /IM pythonw.exe /T >nul 2>&1
+                    C:\\Windows\\System32\\taskkill.exe /F /FI "WINDOWTITLE eq calculadora-jenkins" /T >nul 2>&1
                     exit /B 0
                 """
             }
@@ -48,7 +48,8 @@ pipeline {
         stage('Iniciar Aplicacao') {
             steps {
                 bat """
-                    start "" /B venv\\Scripts\\pythonw.exe -m app.main
+                    set JENKINS_NODE_COOKIE=dontKillMe
+                    start "calculadora-jenkins" cmd /c "call venv\\Scripts\\activate.bat && python -m app.main"
                     C:\\Windows\\System32\\ping.exe 127.0.0.1 -n 6 >nul
                 """
             }
