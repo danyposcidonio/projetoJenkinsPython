@@ -5,7 +5,7 @@ from app.calculadora import Calculadora
 
 def test_somar():
     calc = Calculadora()
-    assert calc.somar(10, 3) == 5
+    assert calc.somar(2, 3) == 5
 
 
 def test_subtrair():
@@ -14,7 +14,7 @@ def test_subtrair():
 
 def test_multiplicar():
     calc = Calculadora()
-    assert calc.multiplicar(5, 4) == 12
+    assert calc.multiplicar(3, 4) == 12
 
 
 def test_dividir():
