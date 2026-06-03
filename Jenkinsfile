@@ -6,16 +6,12 @@ pipeline {
     }
 
     stages {
-
         stage('Preparar Ambiente') {
             steps {
                 bat """
                     "%PYTHON%" -m venv venv
-
                     call venv\\Scripts\\activate.bat
-
                     python -m pip install --upgrade pip
-
                     python -m pip install -r requirements.txt
                 """
             }
@@ -25,7 +21,6 @@ pipeline {
             steps {
                 bat """
                     call venv\\Scripts\\activate.bat
-
                     python -m pytest --junitxml=relatorio-testes.xml
                 """
             }
@@ -35,7 +30,6 @@ pipeline {
             steps {
                 bat """
                     call venv\\Scripts\\activate.bat
-
                     python -m compileall app
                 """
             }
@@ -46,7 +40,6 @@ pipeline {
                 bat """
                     C:\\Windows\\System32\\taskkill.exe /F /IM python.exe /T >nul 2>&1
                     C:\\Windows\\System32\\taskkill.exe /F /IM pythonw.exe /T >nul 2>&1
-
                     exit /B 0
                 """
             }
@@ -55,15 +48,8 @@ pipeline {
         stage('Iniciar Aplicacao') {
             steps {
                 bat """
-                    start "" venv\\Scripts\\pythonw.exe -m app.main
-                """
-            }
-        }
-
-        stage('Aguardar Inicializacao') {
-            steps {
-                bat """
-                    ping 127.0.0.1 -n 6 > nul
+                    start "" /B venv\\Scripts\\pythonw.exe -m app.main
+                    C:\\Windows\\System32\\ping.exe 127.0.0.1 -n 6 >nul
                 """
             }
         }
@@ -71,8 +57,7 @@ pipeline {
 
     post {
         always {
-            junit allowEmptyResults: true,
-                  testResults: 'relatorio-testes.xml'
+            junit allowEmptyResults: true, testResults: 'relatorio-testes.xml'
         }
     }
 }
