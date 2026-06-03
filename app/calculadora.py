@@ -1,16 +1,14 @@
 class Calculadora:
-    """Classe simples para demonstrar testes de unidade em Python."""
-
-    def somar(self, a: float, b: float) -> float:
+    def somar(self, a, b):
         return a + b
 
-    def subtrair(self, a: float, b: float) -> float:
+    def subtrair(self, a, b):
         return a - b
 
-    def multiplicar(self, a: float, b: float) -> float:
+    def multiplicar(self, a, b):
         return a * b
 
-    def dividir(self, a: float, b: float) -> float:
+    def dividir(self, a, b):
         if b == 0:
             raise ValueError("Não é possível dividir por zero.")
         return a / b

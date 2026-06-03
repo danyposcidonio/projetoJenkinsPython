@@ -4,37 +4,57 @@ pipeline {
     stages {
         stage('Preparar ambiente') {
             steps {
-                echo 'Criando ambiente virtual Python...'
-                sh 'python3 -m venv .venv'
-                sh '. .venv/bin/activate && python -m pip install --upgrade pip'
-                sh '. .venv/bin/activate && pip install -r requirements.txt'
+                bat '''
+                    if exist venv rmdir /S /Q venv
+                    py -m venv venv
+                    call venv\Scripts\activate
+                    py -m pip install --upgrade pip
+                    py -m pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Executar testes') {
             steps {
-                echo 'Executando testes unitários...'
-                sh '. .venv/bin/activate && pytest --junitxml=relatorios/testes.xml --cov=app --cov-report=term-missing'
-            }
-            post {
-                always {
-                    junit 'relatorios/testes.xml'
-                }
+                bat '''
+                    call venv\Scripts\activate
+                    py -m pytest --junitxml=relatorio-testes.xml
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Validando build da aplicação...'
-                sh '. .venv/bin/activate && python -m compileall app'
+                bat '''
+                    call venv\Scripts\activate
+                    py -m compileall app
+                '''
             }
         }
 
-        stage('Executar aplicação') {
+        stage('Parar aplicacao anterior') {
             steps {
-                echo 'Executando aplicação de exemplo...'
-                sh '. .venv/bin/activate && python -m app.main'
+                bat '''
+                    for /f "tokens=5" %%a in ('netstat -ano ^| findstr :5000 ^| findstr LISTENING') do taskkill /F /PID %%a
+                    exit /B 0
+                '''
             }
+        }
+
+        stage('Iniciar aplicacao web') {
+            steps {
+                bat '''
+                    call venv\Scripts\activate
+                    start "calculadora-jenkins" /B waitress-serve --host=0.0.0.0 --port=5000 app.main:app > aplicacao.log 2>&1
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'relatorio-testes.xml'
+            archiveArtifacts artifacts: 'aplicacao.log', allowEmptyArchive: true
         }
     }
 }

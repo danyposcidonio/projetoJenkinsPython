@@ -1,104 +1,54 @@
-# Projeto Python com Jenkins
+# Projeto Jenkins Calculadora Web
 
-Este projeto foi criado para demonstrar, de forma simples, como usar Python, testes de unidade e Jenkins.
+Projeto Python com Flask para demonstrar CI/CD com Jenkins.
 
-## Objetivo
+A aplicação abre uma calculadora simples no navegador.
 
-A cada commit no GitHub, o Jenkins pode executar automaticamente:
+## Rodar localmente no Windows
 
-1. Criação do ambiente virtual Python.
-2. Instalação das dependências.
-3. Execução dos testes unitários.
-4. Geração do relatório de testes.
-5. Validação do build da aplicação.
-6. Execução da aplicação de exemplo.
+Entre na raiz do projeto e execute:
 
-## Estrutura do projeto
+```powershell
+py -m venv venv
+.\venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
+py -m pytest
+py -m app.main
+```
+
+Acesse:
 
 ```text
-projeto-python-jenkins/
-├── app/
-│   ├── __init__.py
-│   ├── calculadora.py
-│   └── main.py
-├── tests/
-│   └── test_calculadora.py
-├── Jenkinsfile
-├── requirements.txt
-├── README.md
-└── .gitignore
+http://localhost:5000
 ```
 
-## Como executar localmente
+## Rodar os testes
 
-### 1. Criar ambiente virtual
-
-```bash
-python -m venv .venv
+```powershell
+py -m pytest
 ```
 
-### 2. Ativar ambiente virtual
+## Build simples
 
-No Linux/macOS:
-
-```bash
-source .venv/bin/activate
+```powershell
+py -m compileall app
 ```
 
-No Windows:
+## Jenkins
 
-```bash
-.venv\Scripts\activate
-```
+O Jenkinsfile foi preparado para Windows e usa `py`.
 
-### 3. Instalar dependências
+A cada commit, o Jenkins irá:
 
-```bash
-pip install -r requirements.txt
-```
+1. Criar ambiente virtual.
+2. Instalar dependências.
+3. Executar testes.
+4. Fazer build com compileall.
+5. Derrubar a versão anterior da aplicação na porta 5000.
+6. Subir a calculadora web novamente.
 
-### 4. Executar a aplicação
-
-```bash
-python -m app.main
-```
-
-### 5. Executar os testes
-
-```bash
-pytest
-```
-
-### 6. Executar testes com relatório para Jenkins
-
-```bash
-pytest --junitxml=relatorios/testes.xml --cov=app --cov-report=term-missing
-```
-
-## Como importar no Eclipse/PyDev
-
-1. Abra o Eclipse.
-2. Vá em `File > Import`.
-3. Escolha `Existing Projects into Workspace`.
-4. Selecione a pasta `projeto-python-jenkins`.
-5. Configure o interpretador Python em `Project > Properties > PyDev - Interpreter/Grammar`.
-6. Marque a pasta do projeto como fonte, se necessário.
-
-## Como usar com Jenkins
-
-1. Suba este projeto para um repositório no GitHub.
-2. No Jenkins, crie um item do tipo `Pipeline`.
-3. Configure o repositório GitHub na seção `Pipeline script from SCM`.
-4. Informe o caminho do arquivo:
+Depois do build, acesse:
 
 ```text
-Jenkinsfile
+http://IP_DO_SERVIDOR_JENKINS:5000
 ```
-
-5. Execute o job.
-
-## Observação para Windows
-
-O `Jenkinsfile` usa comandos `sh`, comuns em Jenkins rodando no Linux.
-
-Se o Jenkins estiver rodando no Windows, substitua os comandos `sh` por `bat`.
