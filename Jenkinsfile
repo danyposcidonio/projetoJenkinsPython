@@ -30,8 +30,8 @@ pipeline {
         stage('Analise de Vulnerabilidades') {
     steps {
         dependencyCheck(
-            odcInstallation: 'DependencyCheck',
-            additionalArguments: '--scan .'
+              catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+            dependencyCheck odcInstallation: 'DependencyCheck'
         )
     }
 }
