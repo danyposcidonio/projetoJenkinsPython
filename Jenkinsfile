@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PYTHON = "C:\Users\Usuario\AppData\Local\Microsoft\WindowsApps\python.exe"
+        PYTHON = "C:\\Users\\Usuario\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe"
         JENKINS_NODE_COOKIE = "dontKillMe"
     }
 
