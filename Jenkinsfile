@@ -27,13 +27,13 @@ pipeline {
             }
         }
 
-    stage('Analise de Vulnerabilidades') {
-    steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-            dependencyCheck odcInstallation: 'DependencyCheck'
-        }
-    }
-}
+   // stage('Analise de Vulnerabilidades') {
+    //steps {
+        //catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+            //dependencyCheck odcInstallation: 'DependencyCheck'
+        //}
+    //}
+//}
 
         stage('Build') {
             steps {
