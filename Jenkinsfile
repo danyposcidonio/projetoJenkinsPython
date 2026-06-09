@@ -27,12 +27,11 @@ pipeline {
             }
         }
 
-        stage('Analise de Vulnerabilidades') {
+    stage('Analise de Vulnerabilidades') {
     steps {
-        dependencyCheck(
-              catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
             dependencyCheck odcInstallation: 'DependencyCheck'
-        )
+        }
     }
 }
 
